@@ -1,10 +1,12 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 
 import { companies, industries } from '../utils/data'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Company } from '@/utils/types'
 
 export default function CustomerTestimonials() {
@@ -14,7 +16,7 @@ export default function CustomerTestimonials() {
 
   const handleFilter = (industry: string) => {
     setFilter(industry)
-    if ((industry === 'All')) {
+    if (industry === 'All') {
       setFilteredCompanies(companies)
     } else {
       setFilteredCompanies(
@@ -22,6 +24,13 @@ export default function CustomerTestimonials() {
       )
     }
   }
+
+  const featuredCompanies = filteredCompanies.filter(
+    (company) => company.featured
+  )
+  const regularCompanies = filteredCompanies.filter(
+    (company) => !company.featured
+  )
 
   return (
     <div className="container mx-auto px-4 py-12 font-geistSans">
@@ -42,118 +51,55 @@ export default function CustomerTestimonials() {
           </Button>
         ))}
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-[60rem] mx-auto">
-        {filteredCompanies.map((company) => (
+
+      {featuredCompanies.length > 0 && (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12 mx-auto w-full max-w-4xl">
+          {featuredCompanies.map((company) => (
+            <Card
+              key={company.id}
+              className={`w-full border border-gray-800 relative rounded-2xl transition-all duration-300 ease-in-out hover:border-orange-500 hover:bg-orange-50`}
+            >
+              <Link
+                href={company.url}
+                className="group block w-full rounded-xl outline-none focus-visible:ring-1 focus-visible:ring-orange-400"
+              >
+                <CardContent className="p-0">
+                  <div className="p-4 relative flex h-96 w-full flex-col items-center justify-center">
+                    <div className="relative mx-auto block h-10 w-full max-w-32">
+                      <Image
+                        src={company.logo}
+                        alt={`${company.name} logo`}
+                        width={100}
+                        height={100}
+                        objectFit="contain"
+                        className="object-contain absolute top-0 bottom-0 left-0 right-0 w-full h-full transition-all duration-500 ease-out group-hover:scale-110 group-focus-visible:scale-110"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Link>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-[60rem] mx-auto">
+        {regularCompanies.map((company) => (
           <div key={company.id} className="flex flex-col items-center">
-            <div className="w-32 h-32 relative mb-4">
-              <Image
-                src={company.logo}
-                alt={`${company.name} logo`}
-                layout="fill"
-                objectFit="contain"
-              />
-            </div>
+            <Link href={company.url} target='_blank'>
+              <div className="flex items-center justify-center w-32 h-32 relative mb-4">
+                <Image
+                  src={company.logo}
+                  alt={`${company.name} logo`}
+                  width={100}
+                  height={100}
+                  objectFit="contain"
+                />
+              </div>
+            </Link>
           </div>
         ))}
       </div>
     </div>
   )
-}
-
-{
-  /* <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://www.papermark.io/_next/static/media/papermark-logo.d2fc4f5c.svg"
-          alt="Papermark logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            This is a wip solution for the Papermark quest in{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              oss.gg
-            </code>
-            .
-          </li>
-          <li>Here is gonna be a page with Papermark customer testimonials.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div> */
 }
